@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Anticipatory Threshold — Humanitarian Predictive Analytics Simulation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #F3EEE1;
+    --panel: #FBF8EF;
+    --panel-raised: #F0E8D2;
+    --line: #DCD0B2;
+    --ink: #2E2A20;
+    --ink-dim: #7B7157;
+    --data: #3E6E90;
+    --amber: #B9793A;
+    --rose: #AD4A50;
+    --green: #4C8264;
+    --focus: #B9793A;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 700px at 85% -10%, rgba(185,121,58,0.10), transparent 60%),
+      var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans', sans-serif;
+    line-height:1.55;
+    min-height:100vh;
+  }
+  ::selection{background:var(--amber); color:#191008;}
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+  :focus-visible{outline:2px solid var(--focus); outline-offset:2px;}
+
+  .num{font-family:'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums;}
+  h1,h2,h3,h4, .display{font-family:'Space Grotesk', sans-serif;}
+
+  header.masthead{
+    border-bottom:1px solid var(--line);
+    padding:18px clamp(16px,4vw,40px);
+    display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;
+  }
+  .brand{display:flex; align-items:baseline; gap:10px;}
+  .brand .mark{width:10px;height:10px;border-radius:50%; background:var(--amber); box-shadow:0 0 0 3px rgba(185,121,58,0.15);}
+  .brand h1{font-size:18px; margin:0; font-weight:600; letter-spacing:0.2px;}
+  .brand .sub{color:var(--ink-dim); font-size:13px;}
+  .role-tag{color:var(--ink-dim); font-size:13px;}
+
+  .console{
+    padding:20px clamp(16px,4vw,40px) 6px;
+    display:grid; grid-template-columns:repeat(4, minmax(140px,1fr)); gap:10px;
+  }
+  .zone{background:var(--panel); border:1px solid var(--line); border-radius:6px; padding:12px 14px;}
+  .zone .zlabel{font-size:11px; color:var(--ink-dim); display:flex; justify-content:space-between; gap:6px;}
+  .zone .zval{font-size:22px; margin-top:6px;}
+  .zone .bar{height:4px; background:#E7DEC3; border-radius:2px; margin-top:8px; overflow:hidden;}
+  .zone .bar span{display:block; height:100%; border-radius:2px; transition:width .5s ease, background-color .5s ease;}
+
+  .meta-row{padding:8px clamp(16px,4vw,40px) 20px; display:flex; gap:22px; flex-wrap:wrap; color:var(--ink-dim); font-size:13px;}
+  .meta-row b{color:var(--ink); font-weight:500;}
+
+  main{display:grid; grid-template-columns: 250px 1fr; gap:0; max-width:1180px; margin:0 auto; padding:0 clamp(16px,4vw,40px) 60px;}
+  @media (max-width:820px){ main{grid-template-columns:1fr;} }
+
+  .rail{padding:20px 18px 20px 0; border-right:1px solid var(--line);}
+  @media (max-width:820px){ .rail{border-right:none; border-bottom:1px solid var(--line); padding:10px 0 20px;} }
+  .rail .phase-title{font-size:11px; color:var(--ink-dim); margin:18px 0 8px; padding-left:26px;}
+  .rail .phase-title:first-child{margin-top:0;}
+  .step-item{display:flex; align-items:flex-start; gap:10px; padding:6px 0; color:var(--ink-dim); font-size:13px;}
+  .step-item .dot{width:20px;height:20px;flex:none;border-radius:50%; border:1px solid var(--line); display:flex;align-items:center;justify-content:center; font-family:'IBM Plex Mono',monospace; font-size:10px; background:var(--panel); margin-top:1px;}
+  .step-item.done .dot{background:var(--green); border-color:var(--green); color:#0a1a12;}
+  .step-item.active .dot{background:var(--amber); border-color:var(--amber); color:#241705;}
+  .step-item.active{color:var(--ink); font-weight:500;}
+  .step-item .stitle{padding-top:1px;}
+
+  .stage{padding:20px 0 20px 30px;}
+  @media (max-width:820px){ .stage{padding:20px 0;} }
+  .phase-flag{display:inline-block; font-size:12px; color:var(--amber); border:1px solid rgba(185,121,58,0.4); padding:3px 9px; border-radius:20px; margin-bottom:14px;}
+  .stage h2{font-size:26px; margin:0 0 4px; font-weight:600;}
+  .stage .step-code{color:var(--ink-dim); font-size:13px; margin-bottom:18px; font-family:'IBM Plex Mono',monospace;}
+
+  .card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:22px clamp(16px,3vw,28px);}
+  .card p{margin:0 0 14px; max-width:62ch; color:#4A4432;}
+  .card p:last-of-type{margin-bottom:0;}
+  .experiential{border-left:2px solid var(--data); padding:10px 14px; margin-top:16px; background:rgba(62,110,144,0.08); border-radius:0 6px 6px 0; font-size:14px; color:#33495A; max-width:62ch;}
+  .experiential b{color:var(--data); font-weight:500;}
+
+  .choices{margin-top:22px; display:flex; flex-direction:column; gap:10px;}
+  .choice-btn{text-align:left; background:var(--panel-raised); border:1px solid var(--line); color:var(--ink); border-radius:6px; padding:14px 16px; font:inherit; font-size:14.5px; cursor:pointer; transition:border-color .15s ease, background .15s ease, transform .1s ease; max-width:62ch;}
+  .choice-btn:hover{border-color:var(--data); background:#F3ECD5;}
+  .choice-btn:active{transform:translateY(1px);}
+  .choice-btn .clabel{font-weight:500; display:block; margin-bottom:4px;}
+  .choice-btn .cdesc{color:var(--ink-dim); font-size:13px;}
+  .choice-btn:disabled{opacity:0.4; cursor:default;}
+
+  .outcome{margin-top:20px; padding:16px 18px; border:1px solid var(--line); border-left:3px solid var(--amber); border-radius:0 6px 6px 0; background:rgba(185,121,58,0.08); max-width:62ch; font-size:14.5px;}
+  .outcome .otag{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--amber); display:block; margin-bottom:6px;}
+  .continue-btn{margin-top:20px; background:var(--amber); color:#221507; border:none; font:inherit; font-weight:600; font-size:14px; padding:11px 22px; border-radius:6px; cursor:pointer;}
+  .continue-btn:hover{filter:brightness(1.08);}
+
+  .hero{padding:8px clamp(16px,4vw,40px) 10px; max-width:1180px; margin:0 auto;}
+  .hero h2{font-size:clamp(26px,4vw,38px); max-width:18ch; margin:10px 0 14px; font-weight:600; line-height:1.15;}
+  .hero p{max-width:60ch; color:#4A4432; font-size:15.5px;}
+  .hero .start-btn{margin-top:22px; background:var(--amber); color:#231507; border:none; font:inherit; font-weight:600; font-size:15px; padding:13px 26px; border-radius:6px; cursor:pointer;}
+
+  .brief-box{margin-top:22px; border:1px solid var(--line); border-radius:8px; padding:16px 18px; background:var(--panel); max-width:64ch; font-size:14px; color:var(--ink-dim);}
+  .brief-box b{color:var(--ink);}
+
+  .report h2{font-size:26px; margin:0 0 4px;}
+  .report .lede{color:var(--ink-dim); margin-bottom:24px; max-width:64ch;}
+  .grid-report{display:grid; grid-template-columns:repeat(auto-fit, minmax(220px,1fr)); gap:12px; margin-bottom:24px;}
+  .metric-card{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:16px 18px;}
+  .metric-card .mlabel{font-size:12px; color:var(--ink-dim); display:flex; justify-content:space-between;}
+  .metric-card .mval{font-size:26px; margin-top:6px;}
+  .metric-card .bar{height:5px;background:#E7DEC3;border-radius:3px;margin-top:10px;overflow:hidden;}
+  .metric-card .bar span{display:block;height:100%;border-radius:3px;}
+  .verdict-badge{display:inline-block; font-size:11px; padding:3px 10px; border-radius:20px; margin-top:6px;}
+
+  .aar{background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:6px clamp(16px,3vw,28px) 10px; max-width:74ch;}
+  .aar-section{padding:16px 0; border-top:1px solid var(--line);}
+  .aar-section:first-child{border-top:none;}
+  .aar-section h4{font-size:13px; color:var(--amber); font-weight:600; margin:0 0 8px; letter-spacing:0.3px;}
+  .aar-section p{margin:0 0 10px; color:#4A4432; font-size:14.5px;}
+  .aar-section p:last-child{margin-bottom:0;}
+
+  .decision-log{margin-top:26px;}
+  .decision-log h3{font-size:14px; color:var(--ink-dim); font-weight:500; margin-bottom:10px;}
+  .decision-log ol{margin:0; padding-left:20px; color:#6B6350; font-size:13.5px;}
+  .decision-log li{margin-bottom:6px;}
+  .restart-btn{margin-top:28px; background:transparent; border:1px solid var(--line); color:var(--ink); font:inherit; font-size:13.5px; padding:10px 18px; border-radius:6px; cursor:pointer;}
+  .restart-btn:hover{border-color:var(--data);}
+
+  footer{text-align:center; color:var(--ink-dim); font-size:12px; padding:20px; border-top:1px solid var(--line);}
+  .hidden{display:none !important;}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="brand">
+    <span class="mark" aria-hidden="true"></span>
+    <div>
+      <h1>The Anticipatory Threshold</h1>
+      <div class="sub">Humanitarian Predictive Analytics Simulation</div>
+    </div>
+  </div>
+  <div class="role-tag num" id="clock">SESSION · STANDBY</div>
+</header>
+
+<section class="console" id="console" aria-label="Country status dashboard"></section>
+<div class="meta-row" id="metaRow"></div>
+
+<!-- INTRO -->
+<section class="hero" id="intro">
+  <span class="phase-flag">Operations Briefing</span>
+  <h2>You are the Operations Director. You need to make a decision affecting four countries under uncertainty.</h2>
+  <p>As the Operations Director of a humanitarian agency, you need to make decisions about anticipatory action across four concurrent crises: drought and dispersed shelter needs in Country A, an epidemic with a critical data blind spot in Country B, armed conflict and forced displacement in Country C, and stalled post-earthquake recovery in Country D. Each country provides a different quantity and quality of data. You will move through thirteen steps across four phases: diagnosis and governance, political friction, operational constraints, and accountability. Your choices will shape the consequences of disasters and crises in these four countries.</p>
+  <button class="start-btn" id="startBtn">Begin the briefing</button>
+</section>
+
+<!-- SIMULATION -->
+<main class="hidden" id="simMain">
+  <nav class="rail" id="rail" aria-label="Simulation progress"></nav>
+  <div class="stage" id="stage"></div>
+</main>
+
+<!-- REPORT -->
+<section class="hero report hidden" id="report" style="padding-top:20px;"></section>
+
+<footer>Standalone classroom simulation · runs entirely in this page, no data leaves the browser</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  const state = {
+    zoneA: 60, zoneB: 46, zoneC: 55, zoneD: 42,
+    budget: 100, trust: 60, accuracy: 55,
+    step: -1, log: []
+  };
+
+  const ZONE_META = {
+    zoneA: {name:"Country A", tag:"Drought / Dispersed Shelter"},
+    zoneB: {name:"Country B", tag:"Epidemic / Data Blind Spot"},
+    zoneC: {name:"Country C", tag:"Armed Conflict / Displacement"},
+    zoneD: {name:"Country D", tag:"Earthquake / Recovery Lag"}
+  };
+
+  function clamp(v){ return Math.max(0, Math.min(100, v)); }
+  function applyEffects(eff){
+    for(const k in eff){
+      if(k==="budget") state.budget = clamp(state.budget + eff[k]);
+      else if(k==="trust") state.trust = clamp(state.trust + eff[k]);
+      else if(k==="accuracy") state.accuracy = clamp(state.accuracy + eff[k]);
+      else if(state[k] !== undefined) state[k] = clamp(state[k] + eff[k]);
+    }
+  }
+
+  const STEPS = [
+  {
+    phase:"Phase 1 · Diagnosis, Modeling & Institutional Governance",
+    title:"Data Assessment & Situational Awareness",
+    body:"The multi-crisis evaluation board conducts an initial assessment across four countries. Resources for the first assessment cycle are limited, so you must make a decision about which country should receive deeper data collection first.",
+    experiential:"This situation reflects the <b>digital divide</b> in practice. Country C offers rich satellite imagery, activist network reports, and social media metadata. Meanwhile, Countries B and D face severe data scarcity due to socioeconomic disparities and weak reporting infrastructure, not because they have lower levels of need.",
+    choices:[
+      {label:"Prioritize deeper modeling using Country C's rich data",
+       desc:"Obtain the fastest, most defensible near-term estimates, while Countries B and D remain under-observed.",
+       effect:{zoneC:4, zoneB:-3, zoneD:-3, accuracy:5},
+       outcome:"Country C's projections become more precise. The situational picture for Countries B and D is now based on limited and outdated data from last quarter."},
+      {label:"Commission rapid ground assessments for Countries B and D",
+       desc:"Slower and costlier, but narrows the data gap before finalizing the model.",
+       effect:{zoneB:3, zoneD:3, budget:-6, accuracy:-2},
+       outcome:"Field teams deploy with basic survey tools. Coverage in Countries B and D improves, at the cost of budget and a delayed start to confident modeling."}
+    ]
+  },
+  {
+    phase:"Phase 1 · Diagnosis, Modeling & Institutional Governance",
+    title:"Predictive Modeling & Navigating Uncertainty",
+    body:"You select the analytical approach for this response cycle: advanced methods (e.g. machine learning, computer simulation, drone imagery, and remote sensing) or traditional humanitarian field assessment.",
+    experiential:"A model returns a <b>70% probability</b> of an emerging shock in Country A. Acting on this prediction risks mistargeting and false positives. Waiting for stronger confirmation may leave too little time for anticipatory action.",
+    choices:[
+      {label:"Adopt advanced, high-sensitivity modelling (e.g. ML, remote sensing, drones)",
+       desc:"Detects weak signals earlier, but produces more false positives.",
+       effect:{accuracy:4, trust:-3, budget:-4},
+       outcome:"The model flags a potential shock in Country A three weeks earlier than a conventional baseline would, but it also flags two signals that do not develop into actual shocks."},
+      {label:"Adopt traditional field-assessment methods with stronger confirmation",
+       desc:"Produces fewer false alarms, but narrows the anticipatory window when the shock occurs.",
+       effect:{accuracy:2, trust:3, zoneA:-2},
+       outcome:"Institutional confidence in the prediction increases. When Country A's shock develops, the available lead time is shorter."}
+    ]
+  },
+  {
+    phase:"Phase 1 · Diagnosis, Modeling & Institutional Governance",
+    title:"The Ethical Tech Partnership Dilemma",
+    body:"A private-sector technology corporation offers access to an advanced predictive algorithm in exchange for the institution's proprietary historical case data, which would be used to train their model.",
+    experiential:"This is a direct <b>governance trade-off</b> between computational speed backed by external capital, and <b>data sovereignty</b>, the institution's control over information about the populations it serves.",
+    choices:[
+      {label:"Accept the exchange and hand over historical data",
+       desc:"Provides an immediate uplift in forecasting power across all four countries.",
+       effect:{accuracy:6, zoneA:2, zoneB:2, zoneC:2, zoneD:2, trust:-4},
+       outcome:"Forecasting resolution improves across the board. A partner organization in Country C formally requests clarification on how the shared historical data will now be used and by whom."},
+      {label:"Decline, and retain full data ownership under internal governance",
+       desc:"Produces slower model gains, but the institution keeps full control of its data.",
+       effect:{trust:4, accuracy:-3, budget:-3},
+       outcome:"Data governance stays fully internal. Forecasting resolution remains a step behind what the partnership could have offered."}
+    ]
+  },
+  {
+    phase:"Phase 2 · Socio-Political Friction & Trust Erosion",
+    title:"Political & Economic Interference from Major Stakeholders",
+    body:"Key institutional donors and governments allied with Country C request that you soften or delay the early-warning announcement, citing risk of reputational damage and economic fallout.",
+    experiential:"You are weighing <b>objective predictive intelligence</b> against political retaliation, potential funding cuts, and diplomatic backlash.",
+    choices:[
+      {label:"Issue the warning on schedule, as the model recommends",
+       desc:"Preserves the anticipatory window for Country C, but risks the donor relationship.",
+       effect:{zoneC:4, budget:-8, trust:2},
+       outcome:"The warning is issued on time. Within 48 hours, the donor's office requests an unscheduled review of the funding agreement."},
+      {label:"Delay the announcement pending further verification",
+       desc:"Preserves the relationship, but reduces Country C's lead time.",
+       effect:{zoneC:-5, budget:3, trust:-5},
+       outcome:"The funding relationship holds. Ground reports later confirm what the model already indicated, after part of the anticipatory window has passed."}
+    ]
+  },
+  {
+    phase:"Phase 2 · Socio-Political Friction & Trust Erosion",
+    title:"The Early Warning & False Alarm Dilemma",
+    body:"Acting on proactive foresight, you issue an early-warning alert for a second emerging risk despite unverified ground-level conditions. The predicted disaster does not materialize on the original timeline.",
+    experiential:"Stakeholders who cannot see the underlying probability model perceive a missed prediction, and institutional skepticism rises sharply.",
+    choices:[
+      {label:"Stand by the alert and continue monitoring the indicator",
+       desc:"Holds the position, though it costs visible short-term credibility.",
+       effect:{trust:-4, accuracy:2},
+       outcome:"Monitoring continues. Several partner organizations privately raise concerns about the reliability of future alerts."},
+      {label:"Publicly walk back the alert to manage credibility",
+       desc:"Limits immediate reputational damage, but undercuts the next warning you issue.",
+       effect:{trust:2, accuracy:-4},
+       outcome:"Public criticism eases in the short term. Internal review notes that the next early-warning alert will carry less institutional weight."}
+    ]
+  },
+  {
+    phase:"Phase 2 · Socio-Political Friction & Trust Erosion",
+    title:"Infodemics, Misinformation, & Community Alienation",
+    body:"A disinformation campaign spreads across social media, framing the institution's predictive tracking as predatory surveillance rather than humanitarian preparedness.",
+    experiential:"This step demonstrates how quickly <b>technical accuracy collapses</b> when risk communication and localized trust-building have not been established in advance.",
+    choices:[
+      {label:"Launch a community-led rebuttal campaign with local trusted voices",
+       desc:"Slower to organize, but more credible than an institutional statement.",
+       effect:{trust:6, zoneC:2, budget:-4},
+       outcome:"Local leaders address the disinformation in their own communities. It takes several days to gain traction, but the effect holds."},
+      {label:"Issue an official institutional statement denying the claims",
+       desc:"Fast, but an outside institution denying a rumor rarely settles it.",
+       effect:{trust:-2, budget:-1},
+       outcome:"The statement is published within the hour. Engagement with the original disinformation increases over the following two days."}
+    ]
+  },
+  {
+    phase:"Phase 3 · Operational Constraints & Ethical Triage",
+    title:"AI Drones & Local Reality Friction",
+    body:"You attempt to deploy AI-assisted drone analytics and satellite-driven mapping into the field to accelerate needs assessment.",
+    experiential:"Advanced technology meets infrastructure it was not built for: unreliable connectivity for transmitting data, and communities wary of aircraft overhead after prior instability.",
+    choices:[
+      {label:"Proceed with deployment and add a community-notice protocol",
+       desc:"Keeps the technical advantage, but requires coordination time with local leaders.",
+       effect:{accuracy:4, budget:-3, trust:1},
+       outcome:"Flights proceed on a published schedule announced in advance by local leaders. Community acceptance improves gradually."},
+      {label:"Scale back to ground-based assessment teams only",
+       desc:"Lower-resolution data at a slower pace, with no new local friction.",
+       effect:{trust:3, accuracy:-3},
+       outcome:"Ground teams take roughly twice as long to cover equivalent territory. No new resistance forms around the institution's presence."}
+    ]
+  },
+  {
+    phase:"Phase 3 · Operational Constraints & Ethical Triage",
+    title:"Trigger Calibration & Pre-arranged Financing",
+    body:"You configure the foundational architecture of anticipatory action: quantitative threshold triggers, each linked directly to a pre-arranged financing pool.",
+    experiential:"A threshold set too low draws down financing on near-misses. A threshold set too high means funds arrive after damage has already occurred.",
+    choices:[
+      {label:"Set conservative, high-confidence triggers",
+       desc:"Protects the financing pool from false triggers, but risks late disbursement.",
+       effect:{budget:5, accuracy:2, zoneD:-2},
+       outcome:"The financing pool remains intact through the quiet weeks. When Country D's threshold eventually trips, disbursement follows the need rather than preceding it."},
+      {label:"Set sensitive, early-warning triggers",
+       desc:"Moves funds quickly on borderline signals.",
+       effect:{zoneA:2, zoneB:2, zoneD:2, budget:-7},
+       outcome:"Pre-arranged funds disburse quickly across three countries. Post-hoc review finds two of the three triggers were borderline calls."}
+    ]
+  },
+  {
+    phase:"Phase 3 · Operational Constraints & Ethical Triage",
+    title:"Critical Threshold & Ethical Triage",
+    body:"With 40% of the original budget already deployed, compounding crises across multiple countries push the agency to an absolute resource ceiling. Not all countries can be fully supported with what remains.",
+    experiential:"The trade-off is now explicit: optimize allocation for statistical survival probability, or protect chronically marginalized populations even where the model does not favor them.",
+    choices:[
+      {label:"Allocate remaining resources by projected survival-probability optimization",
+       desc:"Maximizes aggregate modeled outcomes, but concentrates support where infrastructure already exists.",
+       effect:{zoneA:5, zoneC:5, zoneB:-6, zoneD:-6, trust:-4},
+       outcome:"Aggregate modeled outcomes improve. Countries B and D, already the most data-scarce, receive almost no allocation from this round."},
+      {label:"Ring-fence a minimum allocation for the most marginalized countries",
+       desc:"Protects equity, but the model's own statistical optimum goes unmet.",
+       effect:{zoneB:4, zoneD:4, zoneA:-3, zoneC:-3, trust:4},
+       outcome:"Countries B and D receive support outside what the model recommended. The aggregate projected-outcome figure is lower than the alternative allocation would have produced."}
+    ]
+  },
+  {
+    phase:"Phase 3 · Operational Constraints & Ethical Triage",
+    title:"Trade-offs & Pre-agreed Action Execution",
+    body:"With allocation decided, you finalize macro-level resource distribution and legally execute the pre-agreed humanitarian interventions configured at Step 8.",
+    experiential:"No new dilemma is introduced here. This step tests whether the trigger and financing architecture built earlier performs as designed under real pressure.",
+    choices:[
+      {label:"Execute all triggers as pre-arranged, without adjustment",
+       desc:"Tests the trigger design exactly as configured.",
+       effect:{budget:-5, accuracy:3},
+       outcome:"The pre-arranged system executes without manual intervention. Any resulting gaps trace back to the trigger design set at Step 8."},
+      {label:"Override one trigger manually based on the latest field report",
+       desc:"Introduces human judgment into an otherwise automated system.",
+       effect:{trust:2, accuracy:-2, budget:-2},
+       outcome:"The manual override is well received locally. The system designed to be pre-agreed was not fully pre-agreed at the moment it mattered."}
+    ]
+  },
+  {
+    phase:"Phase 4 · Impact, Accountability & Critical Reflection",
+    title:"Final Impact Report & Spillover Dynamics",
+    body:"With the acute phase of the response concluded, outcomes are compiled across all four countries, showing where triggers and pre-arranged funds succeeded and where they did not.",
+    experiential:"Macro-level spillover effects surface at this stage: reduced support to Countries B or D correlates with cross-border migration pressure and populations remaining in chronic poverty traps.",
+    choices:[
+      {label:"Continue to the accountability hearing",
+       desc:"",
+       effect:{},
+       outcome:"The full operations record, including spillover indicators, is compiled for external review."}
+    ]
+  },
+  {
+    phase:"Phase 4 · Impact, Accountability & Critical Reflection",
+    title:"Post-Crisis Accountability & Public Audit",
+    body:"You face a simulated congressional-style inquiry and a live media press briefing. Independent auditors and journalists hold institutional leadership accountable for outcomes in the countries that were not fully supported.",
+    experiential:"Data-driven bias and structural gaps in coverage are no longer abstractions here. They are the specific line items an auditor points to.",
+    choices:[
+      {label:"Lead with the resource-allocation trade-offs made, unprompted",
+       desc:"Costs credibility in the moment, but establishes a documented record of disclosed trade-offs.",
+       effect:{trust:5, budget:-2},
+       outcome:"The briefing is uncomfortable in the room. The published transcript documents an institution that named its own trade-offs before being asked."},
+      {label:"Lead with aggregate outcomes and respond to questions as they arise",
+       desc:"Presents the strongest figures first.",
+       effect:{trust:-3},
+       outcome:"The opening figures are well received. Follow-up questions on Countries B and D land harder for having gone unaddressed at the outset."}
+    ]
+  },
+  {
+    phase:"Phase 4 · Impact, Accountability & Critical Reflection",
+    title:"Debrief & Critical Feedback",
+    body:"A comprehensive After-Action Review compiles the response across three dimensions: how data gaps shaped country-level outcomes, how model confidence and public trust diverged, and how resource allocation altered the response's macro-level results.",
+    experiential:"There is no choice at this final step. Only the compiled record remains.",
+    choices:[
+      {label:"Open the After-Action Review",
+       desc:"",
+       effect:{},
+       outcome:"The full operations record is compiled into a structured after-action report."}
+    ]
+  }
+  ];
+
+  const consoleEl = document.getElementById('console');
+  const metaRow = document.getElementById('metaRow');
+  const railEl = document.getElementById('rail');
+  const stageEl = document.getElementById('stage');
+  const introEl = document.getElementById('intro');
+  const simMain = document.getElementById('simMain');
+  const reportEl = document.getElementById('report');
+  const clockEl = document.getElementById('clock');
+
+  function zoneColor(v){
+    if(v >= 60) return 'var(--green)';
+    if(v >= 35) return 'var(--amber)';
+    return 'var(--rose)';
+  }
+
+  function renderConsole(){
+    consoleEl.innerHTML = Object.keys(ZONE_META).map(k=>{
+      const v = state[k]; const meta = ZONE_META[k];
+      return `<div class="zone">
+        <div class="zlabel"><span>${meta.name}</span><span>${meta.tag}</span></div>
+        <div class="zval num" style="color:${zoneColor(v)}">${v}</div>
+        <div class="bar"><span style="width:${v}%; background:${zoneColor(v)}"></span></div>
+      </div>`;
+    }).join('');
+
+    metaRow.innerHTML =
+      `<span>Budget remaining <b class="num">${state.budget}%</b></span>` +
+      `<span>Public trust <b class="num">${state.trust}</b></span>` +
+      `<span>Model confidence <b class="num">${state.accuracy}</b></span>`;
+
+    clockEl.textContent = state.step < 0
+      ? "ROLE · DIRECTOR — STANDBY"
+      : (state.step >= STEPS.length
+          ? "ROLE · DIRECTOR — SESSION COMPLETE"
+          : `ROLE · DIRECTOR — STEP ${state.step+1} / ${STEPS.length}`);
+  }
+
+  function renderRail(){
+    const phases = [];
+    STEPS.forEach((s,i)=>{
+      if(!phases.length || phases[phases.length-1].phase !== s.phase){
+        phases.push({phase:s.phase, items:[]});
+      }
+      phases[phases.length-1].items.push({i, title:s.title});
+    });
+
+    railEl.innerHTML = phases.map(p=>{
+      const items = p.items.map(it=>{
+        let cls = 'step-item';
+        let dotContent = it.i+1;
+        if(it.i < state.step){ cls += ' done'; dotContent = '✓'; }
+        else if(it.i === state.step){ cls += ' active'; }
+        return `<div class="${cls}"><span class="dot">${dotContent}</span><span class="stitle">${it.title}</span></div>`;
+      }).join('');
+      return `<div class="phase-title">${p.phase}</div>${items}`;
+    }).join('');
+  }
+
+  let awaitingContinue = false;
+
+  function renderStage(){
+    const s = STEPS[state.step];
+    if(!s) return;
+
+    const choicesHtml = s.choices.map((c,idx)=>{
+      const descHtml = c.desc ? `<span class="cdesc">${c.desc}</span>` : '';
+      return `<button class="choice-btn" data-idx="${idx}" ${awaitingContinue ? 'disabled' : ''}>
+        <span class="clabel">${c.label}</span>${descHtml}
+      </button>`;
+    }).join('');
+
+    stageEl.innerHTML = `
+      <span class="phase-flag">${s.phase}</span>
+      <h2>${s.title}</h2>
+      <div class="step-code num">STEP ${String(state.step+1).padStart(2,'0')} / ${STEPS.length}</div>
+      <div class="card">
+        <p>${s.body}</p>
+        <div class="experiential">${s.experiential}</div>
+        <div class="choices">${choicesHtml}</div>
+        <div id="outcomeSlot"></div>
+      </div>
+    `;
+
+    stageEl.querySelectorAll('.choice-btn').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        if(awaitingContinue) return;
+        const idx = parseInt(btn.getAttribute('data-idx'),10);
+        const choice = s.choices[idx];
+        applyEffects(choice.effect);
+        state.log.push({step:s.title, choice:choice.label, outcome:choice.outcome});
+        awaitingContinue = true;
+
+        stageEl.querySelectorAll('.choice-btn').forEach((b,i)=>{
+          b.disabled = true;
+          if(i===idx) b.style.borderColor = 'var(--amber)';
+        });
+
+        const slot = document.getElementById('outcomeSlot');
+        slot.innerHTML = `<div class="outcome"><span class="otag">Result</span>${choice.outcome}</div>` +
+          `<button class="continue-btn" id="continueBtn">${state.step === STEPS.length-1 ? 'View After-Action Review' : 'Continue to next step'}</button>`;
+
+        document.getElementById('continueBtn').addEventListener('click', advance);
+        renderConsole();
+        renderRail();
+        slot.querySelector('.continue-btn').focus();
+      });
+    });
+  }
+
+  function advance(){
+    awaitingContinue = false;
+    state.step += 1;
+    if(state.step >= STEPS.length){
+      renderReport();
+      return;
+    }
+    renderRail();
+    renderStage();
+    window.scrollTo({top: simMain.offsetTop - 20, behavior: 'smooth'});
+  }
+
+  function verdict(v){
+    if(v>=60) return {text:'Holding', color:'var(--green)'};
+    if(v>=35) return {text:'Strained', color:'var(--amber)'};
+    return {text:'Critical', color:'var(--rose)'};
+  }
+
+  function renderReport(){
+    simMain.classList.add('hidden');
+    reportEl.classList.remove('hidden');
+
+    const avgZone = Math.round((state.zoneA+state.zoneB+state.zoneC+state.zoneD)/4);
+    const dataRich = ['zoneA','zoneC']; // received earliest/richest data in this scenario framing
+    const dataScarce = ['zoneB','zoneD'];
+    const richAvg = Math.round((state.zoneA+state.zoneC)/2);
+    const scarceAvg = Math.round((state.zoneB+state.zoneD)/2);
+    const gap = richAvg - scarceAvg;
+    const lowest = Object.keys(ZONE_META).reduce((a,b)=> state[a] < state[b] ? a : b);
+
+    let headline;
+    if(avgZone >= 55 && state.trust >= 55) headline = "Outcome summary: stability maintained, unevenly distributed.";
+    else if(state.trust < 40) headline = "Outcome summary: model performance held, public trust did not.";
+    else headline = "Outcome summary: aggregate stability achieved, equity gap recorded.";
+
+    const metrics = [
+      {label:ZONE_META.zoneA.name+' · '+ZONE_META.zoneA.tag, val:state.zoneA},
+      {label:ZONE_META.zoneB.name+' · '+ZONE_META.zoneB.tag, val:state.zoneB},
+      {label:ZONE_META.zoneC.name+' · '+ZONE_META.zoneC.tag, val:state.zoneC},
+      {label:ZONE_META.zoneD.name+' · '+ZONE_META.zoneD.tag, val:state.zoneD},
+      {label:'Public trust', val:state.trust},
+      {label:'Model confidence', val:state.accuracy},
+    ];
+    const metricCards = metrics.map(m=>{
+      const v = verdict(m.val);
+      return `<div class="metric-card">
+        <div class="mlabel"><span>${m.label}</span></div>
+        <div class="mval num" style="color:${zoneColor(m.val)}">${m.val}</div>
+        <div class="bar"><span style="width:${m.val}%; background:${zoneColor(m.val)}"></span></div>
+        <span class="verdict-badge" style="background:${v.color}22; color:${v.color}; border:1px solid ${v.color}55">${v.text}</span>
+      </div>`;
+    }).join('');
+
+    const logItems = state.log.map(l=> `<li><b>${l.step}:</b> ${l.choice}</li>`).join('');
+
+    reportEl.innerHTML = `
+      <span class="phase-flag">After-Action Review</span>
+      <h2>${headline}</h2>
+      <p class="lede">Average country stability closed at <b class="num" style="color:var(--ink)">${avgZone}/100</b>. Budget remaining: <b class="num" style="color:var(--ink)">${state.budget}%</b>. Lowest-stability country at close: <b style="color:var(--ink)">${ZONE_META[lowest].name}</b> (${ZONE_META[lowest].tag}).</p>
+
+      <div class="grid-report">${metricCards}</div>
+
+      <div class="aar">
+        <div class="aar-section">
+          <h4>1 · Data Gap Zone Outcomes</h4>
+          <p>Countries A and C, which had stronger data coverage at the start of the response, closed with an average stability score of ${richAvg}/100. Countries B and D, which faced data scarcity from the outset, closed with an average of ${scarceAvg}/100, a gap of ${Math.abs(gap)} points in ${gap>=0 ? 'favor of the data-rich countries' : 'favor of the data-scarce countries'}. This gap traces to the level of data coverage recorded at Step 1, not to the volume of resources committed later in the response.</p>
+        </div>
+        <div class="aar-section">
+          <h4>2 · Decoupled Trust Dynamics</h4>
+          <p>Model confidence closed at ${state.accuracy}/100. Public trust closed at ${state.trust}/100. These two measures moved independently across the response: model confidence changed with data quality and validation decisions, while public trust changed with communication, transparency, and community-engagement decisions. ${Math.abs(state.accuracy-state.trust)>=15 ? 'The two measures diverged by a wide margin in this run.' : 'The two measures stayed relatively close together in this run.'}</p>
+        </div>
+        <div class="aar-section">
+          <h4>3 · Resource Allocation Impact</h4>
+          <p>Budget closed at ${state.budget}% of the original allocation. The allocation decisions made under resource constraint determined which countries received support during the final phase of the response, and which recorded further declines. Those declines are consistent with the spillover effects, including cross-border migration pressure and sustained poverty traps, logged at the impact-report stage.</p>
+        </div>
+      </div>
+
+      <div class="decision-log">
+        <h3>Operations log</h3>
+        <ol>${logItems}</ol>
+      </div>
+
+      <button class="restart-btn" id="restartBtn">Run the simulation again</button>
+    `;
+
+    document.getElementById('restartBtn').addEventListener('click', ()=>{
+      Object.assign(state, {zoneA:60, zoneB:46, zoneC:55, zoneD:42, budget:100, trust:60, accuracy:55, step:-1, log:[]});
+      reportEl.classList.add('hidden');
+      introEl.classList.remove('hidden');
+      renderConsole();
+      window.scrollTo({top:0, behavior:'smooth'});
+    });
+
+    renderConsole();
+  }
+
+  document.getElementById('startBtn').addEventListener('click', ()=>{
+    introEl.classList.add('hidden');
+    simMain.classList.remove('hidden');
+    state.step = 0;
+    renderRail();
+    renderStage();
+    renderConsole();
+    window.scrollTo({top: simMain.offsetTop - 20, behavior:'smooth'});
+  });
+
+  renderConsole();
+})();
+</script>
+</body>
+</html>
