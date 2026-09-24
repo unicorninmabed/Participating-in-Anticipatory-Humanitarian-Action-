@@ -206,7 +206,7 @@
   {
     phase:"Phase 1 · Diagnosis, Modeling & Institutional Governance",
     title:"Data Assessment & Situational Awareness",
-    body:"The multi-crisis evaluation board conducts an initial assessment across four countries. Resources for the first assessment cycle are limited, so you must make a decision about which country should receive deeper data collection first.",
+    body:"The multi-crisis evaluation board conducts an initial assessment across four countries. Resources for the first assessment cycle are limited, so you must decide which country should receive deeper data collection first.",
     experiential:"This situation reflects the <b>digital divide</b> in practice. Country C offers rich satellite imagery, activist network reports, and social media metadata. Meanwhile, Countries B and D face severe data scarcity due to socioeconomic disparities and weak reporting infrastructure, not because they have lower levels of need.",
     choices:[
       {label:"Prioritize deeper modeling using Country C's rich data",
@@ -214,9 +214,9 @@
        effect:{zoneC:4, zoneB:-3, zoneD:-3, accuracy:5},
        outcome:"Country C's projections become more precise. The situational picture for Countries B and D is now based on limited and outdated data from last quarter."},
       {label:"Commission rapid ground assessments for Countries B and D",
-       desc:"Slower and costlier, but narrows the data gap before finalizing the model.",
+       desc:"Slower and more costly, but narrows the data gap before finalizing the model.",
        effect:{zoneB:3, zoneD:3, budget:-6, accuracy:-2},
-       outcome:"Field teams deploy with basic survey tools. Coverage in Countries B and D improves, at the cost of budget and a delayed start to confident modeling."}
+       outcome:"Field teams deploy with basic survey tools. Coverage in Countries B and D improves, but the additional resource costs delay the start of confident modeling."}
     ]
   },
   {
@@ -238,15 +238,15 @@
   {
     phase:"Phase 1 · Diagnosis, Modeling & Institutional Governance",
     title:"The Ethical Tech Partnership Dilemma",
-    body:"A private-sector technology corporation offers access to an advanced predictive algorithm in exchange for the institution's proprietary historical case data, which would be used to train their model.",
-    experiential:"This is a direct <b>governance trade-off</b> between computational speed backed by external capital, and <b>data sovereignty</b>, the institution's control over information about the populations it serves.",
+    body:"A private-sector technology corporation offers access to an advanced predictive algorithm in exchange for the institution's proprietary historical case data, which would be used to train its model.",
+    experiential:"This is a direct <b>governance trade-off</b> between computational speed backed by external capital and <b>data sovereignty</b>—the institution's control over information about the populations it serves.",
     choices:[
-      {label:"Accept the exchange and hand over historical data",
+      {label:"Accept the exchange and share historical data",
        desc:"Provides an immediate uplift in forecasting power across all four countries.",
        effect:{accuracy:6, zoneA:2, zoneB:2, zoneC:2, zoneD:2, trust:-4},
        outcome:"Forecasting resolution improves across the board. A partner organization in Country C formally requests clarification on how the shared historical data will now be used and by whom."},
       {label:"Decline, and retain full data ownership under internal governance",
-       desc:"Produces slower model gains, but the institution keeps full control of its data.",
+       desc:"Produces slower model gains, but the institution retains full control of its data.",
        effect:{trust:4, accuracy:-3, budget:-3},
        outcome:"Data governance stays fully internal. Forecasting resolution remains a step behind what the partnership could have offered."}
     ]
@@ -254,11 +254,11 @@
   {
     phase:"Phase 2 · Socio-Political Friction & Trust Erosion",
     title:"Political & Economic Interference from Major Stakeholders",
-    body:"Key institutional donors and governments allied with Country C request that you soften or delay the early-warning announcement, citing risk of reputational damage and economic fallout.",
-    experiential:"You are weighing <b>objective predictive intelligence</b> against political retaliation, potential funding cuts, and diplomatic backlash.",
+    body:"Key institutional donors and governments allied with Country C request that you soften or delay the early-warning announcement, citing the risk of reputational damage and economic fallout.",
+    experiential:"You are weighing <b>objective predictive intelligence</b> against political pressure, potential funding cuts, and diplomatic backlash.",
     choices:[
       {label:"Issue the warning on schedule, as the model recommends",
-       desc:"Preserves the anticipatory window for Country C, but risks the donor relationship.",
+       desc:"Preserves the anticipatory window for Country C, but risks damaging donor relationships.",
        effect:{zoneC:4, budget:-8, trust:2},
        outcome:"The warning is issued on time. Within 48 hours, the donor's office requests an unscheduled review of the funding agreement."},
       {label:"Delay the announcement pending further verification",
@@ -270,11 +270,11 @@
   {
     phase:"Phase 2 · Socio-Political Friction & Trust Erosion",
     title:"The Early Warning & False Alarm Dilemma",
-    body:"Acting on proactive foresight, you issue an early-warning alert for a second emerging risk despite unverified ground-level conditions. The predicted disaster does not materialize on the original timeline.",
+    body:"Acting on the forecast, you issue an early-warning alert for a second emerging risk despite unverified ground-level conditions. The predicted disaster does not materialize within the expected timeframe.",
     experiential:"Stakeholders who cannot see the underlying probability model perceive a missed prediction, and institutional skepticism rises sharply.",
     choices:[
       {label:"Stand by the alert and continue monitoring the indicator",
-       desc:"Holds the position, though it costs visible short-term credibility.",
+       desc:"Maintains the alert, though it costs visible short-term credibility.",
        effect:{trust:-4, accuracy:2},
        outcome:"Monitoring continues. Several partner organizations privately raise concerns about the reliability of future alerts."},
       {label:"Publicly walk back the alert to manage credibility",
@@ -287,14 +287,14 @@
     phase:"Phase 2 · Socio-Political Friction & Trust Erosion",
     title:"Infodemics, Misinformation, & Community Alienation",
     body:"A disinformation campaign spreads across social media, framing the institution's predictive tracking as predatory surveillance rather than humanitarian preparedness.",
-    experiential:"This step demonstrates how quickly <b>technical accuracy collapses</b> when risk communication and localized trust-building have not been established in advance.",
+    experiential:"This step demonstrates how quickly <b>the value of technical accuracy can erode</b> when risk communication and localized trust-building have not been established in advance.",
     choices:[
-      {label:"Launch a community-led rebuttal campaign with local trusted voices",
+      {label:"Launch a community-led rebuttal campaign with trusted local voices",
        desc:"Slower to organize, but more credible than an institutional statement.",
        effect:{trust:6, zoneC:2, budget:-4},
        outcome:"Local leaders address the disinformation in their own communities. It takes several days to gain traction, but the effect holds."},
       {label:"Issue an official institutional statement denying the claims",
-       desc:"Fast, but an outside institution denying a rumor rarely settles it.",
+       desc:"Fast, but an institutional denial rarely settles a rumor.",
        effect:{trust:-2, budget:-1},
        outcome:"The statement is published within the hour. Engagement with the original disinformation increases over the following two days."}
     ]
@@ -302,7 +302,7 @@
   {
     phase:"Phase 3 · Operational Constraints & Ethical Triage",
     title:"AI Drones & Local Reality Friction",
-    body:"You attempt to deploy AI-assisted drone analytics and satellite-driven mapping into the field to accelerate needs assessment.",
+    body:"You attempt to deploy AI-assisted drone analytics and satellite-based mapping into the field to accelerate needs assessment.",
     experiential:"Advanced technology meets infrastructure it was not built for: unreliable connectivity for transmitting data, and communities wary of aircraft overhead after prior instability.",
     choices:[
       {label:"Proceed with deployment and add a community-notice protocol",
@@ -310,7 +310,7 @@
        effect:{accuracy:4, budget:-3, trust:1},
        outcome:"Flights proceed on a published schedule announced in advance by local leaders. Community acceptance improves gradually."},
       {label:"Scale back to ground-based assessment teams only",
-       desc:"Lower-resolution data at a slower pace, with no new local friction.",
+       desc:"Lower-resolution data at a slower pace, with less risk of creating new local tensions.",
        effect:{trust:3, accuracy:-3},
        outcome:"Ground teams take roughly twice as long to cover equivalent territory. No new resistance forms around the institution's presence."}
     ]
@@ -335,7 +335,7 @@
     phase:"Phase 3 · Operational Constraints & Ethical Triage",
     title:"Critical Threshold & Ethical Triage",
     body:"With 40% of the original budget already deployed, compounding crises across multiple countries push the agency to an absolute resource ceiling. Not all countries can be fully supported with what remains.",
-    experiential:"The trade-off is now explicit: optimize allocation for statistical survival probability, or protect chronically marginalized populations even where the model does not favor them.",
+    experiential:"The trade-off is now explicit: optimize allocation for projected survival probability, or protect chronically marginalized populations even where the model does not favor them.",
     choices:[
       {label:"Allocate remaining resources by projected survival-probability optimization",
        desc:"Maximizes aggregate modeled outcomes, but concentrates support where infrastructure already exists.",
@@ -350,7 +350,7 @@
   {
     phase:"Phase 3 · Operational Constraints & Ethical Triage",
     title:"Trade-offs & Pre-agreed Action Execution",
-    body:"With allocation decided, you finalize macro-level resource distribution and legally execute the pre-agreed humanitarian interventions configured at Step 8.",
+    body:"With allocation decided, you finalize macro-level resource distribution and implement the pre-agreed humanitarian interventions configured at Step 8.",
     experiential:"No new dilemma is introduced here. This step tests whether the trigger and financing architecture built earlier performs as designed under real pressure.",
     choices:[
       {label:"Execute all triggers as pre-arranged, without adjustment",
@@ -367,7 +367,7 @@
     phase:"Phase 4 · Impact, Accountability & Critical Reflection",
     title:"Final Impact Report & Spillover Dynamics",
     body:"With the acute phase of the response concluded, outcomes are compiled across all four countries, showing where triggers and pre-arranged funds succeeded and where they did not.",
-    experiential:"Macro-level spillover effects surface at this stage: reduced support to Countries B or D correlates with cross-border migration pressure and populations remaining in chronic poverty traps.",
+    experiential:"Macro-level spillover effects surface at this stage: reduced support to Countries B or D is associated with cross-border migration pressure and populations remaining in chronic poverty traps.",
     choices:[
       {label:"Continue to the accountability hearing",
        desc:"",
@@ -379,12 +379,12 @@
     phase:"Phase 4 · Impact, Accountability & Critical Reflection",
     title:"Post-Crisis Accountability & Public Audit",
     body:"You face a simulated congressional-style inquiry and a live media press briefing. Independent auditors and journalists hold institutional leadership accountable for outcomes in the countries that were not fully supported.",
-    experiential:"Data-driven bias and structural gaps in coverage are no longer abstractions here. They are the specific line items an auditor points to.",
+    experiential:"Data-driven bias and structural gaps in coverage are no longer abstractions here. They are the specific line items auditors point to.",
     choices:[
       {label:"Lead with the resource-allocation trade-offs made, unprompted",
        desc:"Costs credibility in the moment, but establishes a documented record of disclosed trade-offs.",
        effect:{trust:5, budget:-2},
-       outcome:"The briefing is uncomfortable in the room. The published transcript documents an institution that named its own trade-offs before being asked."},
+       outcome:"The briefing is tense. The published transcript documents an institution that openly acknowledged its own trade-offs before being asked."},
       {label:"Lead with aggregate outcomes and respond to questions as they arise",
        desc:"Presents the strongest figures first.",
        effect:{trust:-3},
@@ -579,7 +579,7 @@
       <div class="aar">
         <div class="aar-section">
           <h4>1 · Data Gap Zone Outcomes</h4>
-          <p>Countries A and C, which had stronger data coverage at the start of the response, closed with an average stability score of ${richAvg}/100. Countries B and D, which faced data scarcity from the outset, closed with an average of ${scarceAvg}/100, a gap of ${Math.abs(gap)} points in ${gap>=0 ? 'favor of the data-rich countries' : 'favor of the data-scarce countries'}. This gap traces to the level of data coverage recorded at Step 1, not to the volume of resources committed later in the response.</p>
+          <p>Countries A and C, which had stronger data coverage at the start of the response, closed with an average stability score of ${richAvg}/100. Countries B and D, which faced data scarcity from the outset, closed with an average stability score of ${scarceAvg}/100, a gap of ${Math.abs(gap)} points in ${gap>=0 ? 'favor of the data-rich countries' : 'favor of the data-scarce countries'}. This gap traces to the level of data coverage recorded at Step 1, not to the volume of resources committed later in the response.</p>
         </div>
         <div class="aar-section">
           <h4>2 · Decoupled Trust Dynamics</h4>
@@ -587,7 +587,7 @@
         </div>
         <div class="aar-section">
           <h4>3 · Resource Allocation Impact</h4>
-          <p>Budget closed at ${state.budget}% of the original allocation. The allocation decisions made under resource constraint determined which countries received support during the final phase of the response, and which recorded further declines. Those declines are consistent with the spillover effects, including cross-border migration pressure and sustained poverty traps, logged at the impact-report stage.</p>
+          <p>Budget closed at ${state.budget}% of the original allocation. The allocation decisions made under resource constraints determined which countries received support during the final phase of the response and which recorded further declines. Those declines are consistent with the spillover effects, including cross-border migration pressure and sustained poverty traps, recorded at the impact-report stage.</p>
         </div>
       </div>
 
